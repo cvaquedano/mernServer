@@ -28,12 +28,10 @@ exports.autenticarUsuario = async (req, res) =>{
          const payload ={
             usuario:{
                 id: usuario.id,
-
             }
-
         };
 
-        // firmar el jwm
+        // firmar el jwm.
         jwt.sign(payload, process.env.SECRETA,{
             expiresIn: 3600 //segundos
         }, (error, token)=>{
