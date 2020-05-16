@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json({extended: true}));
 
 // puerto de la app
-const PORT = process.env.PORT || 4000;
+const port = process.env.port || 4000;
 
 // importar rutas
 app.use('/api/usuarios', require('./routes/usuarios'));
@@ -28,6 +28,6 @@ app.get('/',(req,res)=>{
     res.send('Hola mundo');
 });
 
-app.listen(PORT,()=>{
+app.listen(port,'0.0.0.0', ()=>{
     console.log(`El servidor esta corriendo en el puerto ${PORT}`);
 });
