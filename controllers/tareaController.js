@@ -35,19 +35,20 @@ exports.obtenerTareas = async (req, res) =>{
 
     try {
 
-        const proyecto = await Proyecto.findById(req.body.proyecto);
-        if(!proyecto){
+        const {proyecto} = req.query; // req.body.proyecto
+        const proyectoExistente = await Proyecto.findById(proyecto);
+        if(!proyectoExistente){
             return res.status(404).json({msg: 'Proyecto no encontrado'})
         }
 
-        if(proyecto.creador.toString() !== req.usuario.id){
+        if(proyectoExistente.creador.toString() !== req.usuario.id){
             return res.status(401).json({msg: 'No autorizado'})
         }
 
 
-        const Tareas = await Tarea.find({proyecto : req.body.proyecto}).sort({creado: -1});;
+        const tareas = await Tarea.find({proyecto : proyecto}).sort({creado: -1});;
 
-        res.json({Tareas});
+        res.json({tareas});
     } catch (error) {
         console.log(error);
         res.status(500).send('Hubo un error');
@@ -86,7 +87,7 @@ exports.actualizarTarea = async (req, res) =>{
         const nuevaTarea={};
 
         nuevaTarea.nombre = nombre;
-        if(estado) nuevaTarea.estado = estado;
+        nuevaTarea.estado = estado;
 
         tarea = await Tarea.findByIdAndUpdate({_id: req.params.id }, {$set : nuevaTarea}, {new: true});
 
@@ -103,7 +104,7 @@ exports.eliminarTarea = async (req, res) =>{
 
     try
     {
-        const {proyecto} = req.body;
+        const {proyecto} = req.query;
         const existeProyecto = await Proyecto.findById(proyecto);
 
         if(!existeProyecto){
